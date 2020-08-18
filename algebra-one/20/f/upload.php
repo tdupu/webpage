@@ -1,66 +1,74 @@
-
-
-
 <?php
     
     /*
-    AUTHOR: Taylor Dupuy
-    DATE: August, 2020
+     
+     *target_dir needed a chmod +w
+     
+     *a good command for debugging
+     
+     echo "<pre>";
+     print_r($_FILES);
+     echo "</pre>";
+     
+     *One can run
+     
+     which python3
+     
+     to get a version of the python3 we need to use.
+     /usr/bin/python3
+     
+     */
     
-    This code is covered by Gnu public license.
-    
-    DESCRIPTION OF THE CODE:
-     upload.php file that is going to be called from upload.html where students upload files for peer review.
-     This is organized and called from my_submissions.py.
-     
-    INFORMATION ABOUT THIS FILE:
-     *This file needs permission to execute new_submission.py. To do this run
-     
-     chmod +x new_submission.py
-     
-     *The python script new_submission.py needs a #! statement at the top of its file in order not to be confused about its path. I have no idea what this does.
-     
-     *For testing: in directory where you want the CLI webserver to be rooted run:
-     
-     php -S localhost:8000 -c php.ini
-     
-     or
-     
-     php -S localhost:8000 -c "file_uploads =On"
-     
-     the following option sets the root to public_html
-     
-     -t public_html/
-     
-     Information about the CLI webserver can be found here:
-         
-     https://www.php.net/manual/en/features.commandline.webserver.php
-     
-     Also, when uploads stopped working there was a time when restarting the computer helped.
-     
-     *The php.ini file should have the following three lines:
-     
-     file_uploads = On
-     max_execution_time = 3M
-     upload_max_filesize = 4M
-     
-     *don't forget your dollar signs when coding in PHP.
+    /*
+    function IsChecked($chkname,$value)
+    {
+        if(!empty($_POST[$chkname]))
+        {
+            foreach($_POST[$chkname] as $chkval)
+            {
+                if($chkval == $value)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     */
-
-    $path_to_data = "../../../../data/algebra-one/20/f/";
-    $target_dir = "../../../../data/algebra-one/20/f/uploads/"
+    
+    #$mystring0 = file_get_contents("constants.json");
+    #$CONSTANTS = json_decode($mystring-,true);
+    #$target_dir=$CONSTANTS['path_to_dev']
+    #$path_to_dev=$CONSTANTS['path_to_data']
+    #$path_to_data=$CONSTANTS['path_to_uploads']
+    
+    $target_dir = "../../../../data/algebra-one/20/f/uploads/";
     $path_to_dev = "../../../../dev/submission_tools/";
-    $python_script_path = "../../../../dev/submission_tools/";
-    $python_script_name = "new_submission.py ";
+    $path_to_data = "../../../../data/algebra-one/20/f/";
     
     $mystring = file_get_contents($path_to_dev . "variables.json");
     $variables = json_decode($mystring,true);
     
-
-    $fname1 = basename($_FILES["file1"]["name"]); #needs to change
-    $target1 = $path_to_data . $user_filename1;
-    $type1 = strtolower(pathinfo($fname1,PATHINFO_EXTENSION));
-    $tmp1 =$_FILES['file1']['tmp_name'];
+if ($variables["server_down"]==1){
+     
+    echo "the server is down. some scripts are running on the data. try back in 10 minutes. <br>";
+        
+} elseif (!isset($_POST['conduct'])) {
+    
+    echo "please certify code of conduct. <br>";
+    
+} else {
+    
+    $filename1 =basename($_FILES["file1"]["name"]);
+    $filetype1 = $_FILES["file1"]["type"];
+    $filename2 =basename($_FILES["file2"]["name"]);
+    $filetype2 = $_FILES["file2"]["type"];
+    $filename3 =basename($_FILES["file3"]["name"]);
+    $filetype3 = $_FILES["file3"]["type"];
+    $filename4 =basename($_FILES["file4"]["name"]);
+    $filetype4 = $_FILES["file4"]["type"];
+    $filename5 =basename($_FILES["file5"]["name"]);
+    $filetype5 = $_FILES["file5"]["type"];
     
     if (!isset($postData)) $postData = new stdClass();
     
@@ -114,190 +122,225 @@
     $postData->score10 = $_POST["score10"];
     $postData->review10 = $_POST["review10"];
     
+    $data2 = array();
     
-    if ($variables["server_down"]==1){
-     
-        echo "The server is down for maintainence. It should be back up shortly. <br>";
-        
-        
+    if($filename1==""){
+        $data2[1]=0;
+    } elseif($filetype1 != "application/pdf") {
+        $data2[1]=0;
     } else {
-        
-        $mydata = strip_tags($_POST['jojo']);
-        if(isset($mydata)) {
-            
-            //writing to JSON file
-            $postJSON = json_encode($postData);
-            $temp_file_path = $path_to_data . "temp.json";
-            unlink($temp_file_path); #DELETES STUFF, DO NOT MODIFY
-            $fp = fopen($temp_file_path, 'a');
-            fwrite($fp, $postJSON);
-            fclose($fp);
-            #somehow I need to unlink this or be able to add more entries.
-            
-            echo("post data to json... <br>");
-            echo("running new_submission.py... <br> <br>");
-            
-            $shell_command = $python_script_path . $python_script_name;
-            $pyoutput = shell_exec('python helloworld.py');
-            echo($pyoutput);
-            
-            #$mystring2 = file_get_contents($path_to_data ."temp2.json");
-            #$writetofile = json_decode($mystring2,true);
-            
-            
-        }
-        
-
+        $data2[1]=1;
+    }
     
+    if($filename2==""){
+        $data2[2]=0;
+    } elseif($filetype2 != "application/pdf") {
+        $data2[2]=0;
+    } else {
+        $data2[2]=1;
+    }
+    
+    if($filename3==""){
+        $data2[3]=0;
+    } elseif($filetype3 != "application/pdf") {
+        $data2[3]=0;
+    } else {
+        $data2[3]=1;
+    }
+    
+    if($filename4==""){
+        $data2[4]=0;
+    } elseif($filetype4 != "application/pdf") {
+        $data2[4]=0;
+    } else {
+        $data2[4]=1;
+    }
+    
+    if($filename5==""){
+        $data2[5]=0;
+    } elseif($filetype5 != "application/pdf") {
+        $data2[5]=0;
+    } else {
+        $data2[5]=1;
     }
     
     
-
-    
-    /*
-    RUN SCRIPT
-     
-    WARNING - DO NOT LET USERS PASS DATA TO SHELL!!!
-    */
-    
-    
-    /*
-    
-
-
-    $user_filename1 = basename($_FILES["file1"]["name"]);
-    $filetype1 = strtolower(pathinfo($user_filename1,PATHINFO_EXTENSION));
-    $user_filename2 = basename($_FILES["file2"]["name"]);
-    $filetype2 = strtolower(pathinfo($user_filename2,PATHINFO_EXTENSION));
-    $user_filename3 = basename($_FILES["file3"]["name"]);
-    $filetype3 = strtolower(pathinfo($user_filename3,PATHINFO_EXTENSION));
-    $user_filename4 = basename($_FILES["file4"]["name"]);
-    $filetype4 = strtolower(pathinfo($user_filename4,PATHINFO_EXTENSION));
-    $user_filename5 = basename($_FILES["file5"]["name"]);
-    $filetype5 = strtolower(pathinfo($user_filename4,PATHINFO_EXTENSION));
-    */
-     
-    
-    
-    
-     
-    /*
-    for($x=1; x<=5; $x++){
-        if(writetofile[x]==1){
-            echo "attempting to upload PDF" . $x . "<br>";
+    $mydata = strip_tags($_POST['jojo']);
+    if(isset($mydata)) {
         
-            
-            // Check if file already exists
-            if (file_exists($target_file)) {
-                echo "The previous submission will be overwritten..." . "<br>";
-              $upload1Ok = 1;
-                
-                $target_file = $target_dir . $user_id . "-" . $hwnumber . ".pdf";
-             
-            }
+        //writing to JSON file
+        $postJSON = json_encode($postData);
+        $temp_file_path = $path_to_data . "temp.json";
+        unlink($temp_file_path); #DELETES STUFF, DO NOT MODIFY
+        $fp = fopen($temp_file_path, 'a');
+        fwrite($fp, $postJSON);
+        fclose($fp);
+        
+        $dataJSON2 = json_encode($data2);
+        $temp_file_path = $path_to_data . "temp2.json";
+        unlink($temp_file_path); #DELETES STUFF, DO NOT MODIFY
+        $fp = fopen($temp_file_path, 'a');
+        fwrite($fp, $dataJSON2);
+        fclose($fp);
+        /*
+         We had a fiasco with discrepancies between PHP paths and python paths.
+         This is what you are seeing.
+         The solution was to hard code the paths.
+         This is going to a bitch when we move it to the server.
+         */
+        //$pyoutput = shell_exec('python helloworld.py');
+        #$shell_command = "/usr/bin/python3 " . $path_to_dev . "new_submission.py";
+        #echo $shell_command . "<br>";
+        #$pyoutput = shell_exec($shell_command);
+        #$pyoutput = system($shell_command);
+        #echo("fuck <br>");
+        #$shell_command = "python3 " . $path_to_dev . "new_submission.py";
+        #$pyoutput = exec($shell_command);
+        #$shell_command = "python3 " . $path_to_dev . "new_submission.py";
+        #$pyoutput = system($shell_command);
+        
+        $shell_command = "python3 " . $path_to_dev . "new_submission.py";
+        #$pyoutput = shell_exec($shell_command);
+        #exec($shell_command,$pyoutput,$exitstatus);
+        #echo $pyoutput . "<br>";
+        #$exitstatus = rtrim($pyoutput);
+        system($shell_command,$exitstatus); //got an error here about an unexpected "echo"
+        
+    }
+    
+    //grab data 3
+    $mystring3 = file_get_contents($path_to_data . "temp3.json");
+    $data3 = json_decode($mystring3,true);
+    $user_id = $_POST["netid"];
+    
+    $uploadOk1 = $data3[1]['uploadOk'];
+    $subnumber1 = $data3[1]['submission_number'];
+    $assignment1= $_POST['assignment1'];
+    $problem1= $_POST['problem1'];
+    $pdfname1 = $user_id . "-" . $assignment1  ."-" . $problem1 . ".pdf";
+    $target1 = $target_dir . $pdfname1; //needs the submission numbers
+    $tmp1 =$_FILES['file1']['tmp_name'];
+    
+    $uploadOk2 = $data3[2]['uploadOk'];
+    $subnumber2 = $data3[2]['submission_number'];
+    $assignment2= $_POST['assignment2'];
+    $problem2= $_POST['problem2'];
+    $pdfname2 = $user_id . "-" . $assignment2  ."-" . $problem2 . ".pdf";
+    $target2 = $target_dir . $pdfname2; //needs the submission numbers
+    $tmp2 =$_FILES['file2']['tmp_name'];
+    
+    $uploadOk3 = $data3[3]['uploadOk'];
+    $subnumber3 = $data3[3]['submission_number'];
+    $assignment3= $_POST['assignment3'];
+    $problem3= $_POST['problem3'];
+    $pdfname3 = $user_id . "-" . $assignment3  ."-" . $problem3 . ".pdf";
+    $target3 = $target_dir . $pdfname3; //needs the submission numbers
+    $tmp3 =$_FILES['file3']['tmp_name'];
+    
+
+    $uploadOk4 = $data3[4]['uploadOk'];
+    $subnumber4 = $data3[4]['submission_number'];
+    $assignment4= $_POST['assignment4'];
+    $problem4= $_POST['problem4'];
+    $pdfname4 = $user_id . "-" . $assignment4  ."-" . $problem4 . ".pdf";
+    $target4 = $target_dir . $pdfname4; //needs the submission numbers
+    $tmp4 =$_FILES['file4']['tmp_name'];
+    
+    $uploadOk5 = $data3[5]['uploadOk'];
+    $subnumber5 = $data3[5]['submission_number']; //got an error here.
+    $assignment5= $_POST['assignment5'];
+    $problem5= $_POST['problem5'];
+    $pdfname5 = $user_id . "-" . $assignment5  ."-" . $problem5 . ".pdf";
+    $target5 = $target_dir . $pdfname5; //needs the submission numbers
+    $tmp5 =$_FILES['file5']['tmp_name'];
+        
+    
+    // Check if file already exists
+    
+    echo "<br> PDF UPLOADS: <br>";
+        
+    if ($uploadOk1 == 1) {
+        if (file_exists($target1)) {
+            echo "*assignment " . $assignment1 . ", problem" . $problem1 . " overwritten. <br>";
         }
-    */
+        if (move_uploaded_file($tmp1, $target1)) {
+            echo $filename1 . " uploaded. <br>";
+        } else {
+            echo "*error. " . $filename1 . " not uploaded. <br>";
+        }
+    } else {
+        echo "<br>";
+    }
     
-
-
-
-
-
-
-
-
+    if ($uploadOk2 == 1) {
+        if (file_exists($target2)) {
+            echo "*assignment " . $assignment2 . ", problem" . $problem2 . " overwritten. <br>";
+        }
+        if (move_uploaded_file($tmp2, $target2)) {
+            echo $filename2 . " uploaded. <br>";
+        } else {
+            echo "*error. " . $filename2 . " not uploaded. <br>";
+        }
+    } else {
+        echo "<br>";
+    }
     
-
- 
-
-
-
-/*
-#####################################
-  #####################################
-  #####################################
-  #####################################
-  #####################################
- */
-
-/*
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-  echo "Your file was not uploaded. \n ";
-// if everything is ok, try to upload file
-} else {
-  if (move_uploaded_file($_FILES["file1"]["tmp_name"], $target_file)) {
-      //echo "I have no idea what is going on";
-      echo "The file " . $user_filename . " has been uploaded. <br> Any resubmission will overwrite the current one. <br>";
-      //echo "The file has been uploaded. <br> Any resubmission will overwrite the current one.";
-      
-  } else {
-      echo "Sorry, there was an error uploading your file." . "<br>";
-  }
-*/
-
-
-/*
- This is code that we need to put in
- $data[] = $_POST['data'];
-
- $inp = file_get_contents('results.json');
- $tempArray = json_decode($inp);
- array_push($tempArray, $data);
- $jsonData = json_encode($tempArray);
- file_put_contents('results.json', $jsonData);
- */
-//echo $postJSON;
-
-
-//echo $shell_command;
-//echo $docFileType;
-//$path = $target_dir;
-//echo "Path : $path";
-//require "$path";
-
-/*
-$myObject = new stdClass();
-$mySmallerObject = new stdClass();
-for($x=1; x<=5; $x++){
-    $mySmallerObject->x = x^2;
+    if ($uploadOk3 == 1) {
+        if (file_exists($target3)) {
+            echo "*assignment " . $assignment3 . ", problem" . $problem3 . " overwritten. <br>";
+        }
+        if (move_uploaded_file($tmp3, $target3)) {
+            echo $filename3 . " uploaded. <br>";
+        } else {
+            echo "*error. " . $filename3 . " not uploaded. <br>";
+        }
+    } else {
+        echo "<br>";
+    }
+    
+    if ($uploadOk4 == 1) {
+        if (file_exists($target4)) {
+            echo "*assignment " . $assignment4 . ", problem" . $problem4 . " overwritten. <br>";
+        }
+        if (move_uploaded_file($tmp4, $target4)) {
+            echo $filename4 . " uploaded. <br>";
+        } else {
+            echo "*error. " . $filename4 . " not uploaded. <br>";
+        }
+    } else {
+        echo "<br>";
+    }
+    
+    if ($uploadOk5 == 1) {
+        if (file_exists($target5)) {
+            echo "*assignment " . $assignment5 . ", problem" . $problem5 . " overwritten. <br>";
+        }
+        if (move_uploaded_file($tmp5, $target5)) {
+            echo $filename5 . " uploaded. <br>";
+        } else {
+            echo "*error. " . $filename5 . " not uploaded. <br>";
+        }
+    } else {
+        echo "<br>";
+    }
+    
+    
+    #in case of an error in the future, make sure nothing else uploads.
+    $data3[1]['uploadOk']=0;
+    $data3[2]['uploadOk']=0;
+    $data3[3]['uploadOk']=0;
+    $data3[4]['uploadOk']=0;
+    $data3[5]['uploadOk']=0;
+    
+    $postJSON3 = json_encode($data3);
+    $temp_file_path = $path_to_data . "temp3.json";
+    unlink($temp_file_path); #DELETES STUFF, DO NOT MODIFY
+    $fp = fopen($temp_file_path, 'a');
+    fwrite($fp, $postJSON3);
+    fclose($fp);
+    
+    echo "<br> EXIT STATUS: " . $exitstatus . " (if anything other than zero, constant Taylor) <br>";
+    
+    
 }
-$myObject->ff = $mySmallerObject;
-$myObject->gg = "some text";
-
-for($x=1; x<=5; $x++){
-    echo("" . x . "" . $myObject['ff'][x])
-}
-*/
-
-
-/*
- $myArray = array();
- $mySmallerArray = array();
- for($x=1; $x<=5; $x++){
-     $mySmallerArray[x] = x^2;
- }
-$myArray["ff"] = $mySmallerArray;
-$myArray["gg"] = "some text";
- 
- for($x=1; $x<=5; $x++){
-     echo("$x $myArray['ff'][x]");
- }
- */
-
-/*
-$myArray = array();
-$mySmallerArray = array();
- for($x=1; $x<=5; $x++){
-     $mySmallerArray[$x] = $x**2; #not $x^2
- }
-$myArray["ff"] = $mySmallerArray;
-$myArray["gg"] = "some text";
- 
-#$y = int();
- for($x=1; $x<=5; $x++){
-     $y=$myArray['ff'][$x];
-     echo("$x $y <br>");
- }*/
-
 ?>
