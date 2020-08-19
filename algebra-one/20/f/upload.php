@@ -2,50 +2,48 @@
     
     /*
      
+     AUTHOR: TAYLOR DUPUY
+     DATE: September 2020
+     
+     
+     *web_constants.json needs to be modified for the particular course this file is for.
+     git is set to upload rename_to_web_constants.json
+     it should be copied to a file web_constants.json and the entries need to be modified.
+     target_dir is the path the the uploads
+     path_to_dev is the path to the folder above submission_tools
+     path_to_data is the path that should be the same as PATH_TO_DATA
+     
+     
      *target_dir needed a chmod +w
+     
+     *on your server the php.ini file needs to be set to upload
      
      *a good command for debugging
      
-     echo "<pre>";
-     print_r($_FILES);
-     echo "</pre>";
+         echo "<pre>";
+         print_r($_FILES);
+         echo "</pre>";
      
      *One can run
      
-     which python3
+        which python3
      
      to get a version of the python3 we need to use.
-     /usr/bin/python3
+        
+        /usr/bin/python3
      
      */
     
-    /*
-    function IsChecked($chkname,$value)
-    {
-        if(!empty($_POST[$chkname]))
-        {
-            foreach($_POST[$chkname] as $chkval)
-            {
-                if($chkval == $value)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    */
-    
     $mystring0 = file_get_contents("web_constants.json");
     $CONSTANTS = json_decode($mystring0,true);
-    $target_dir=$CONSTANTS['path_to_data']
+   
+    $target_dir = $CONSTANTS['target_dir'];
+    $path_to_dev = $CONSTANTS['path_to_dev'];
+    $path_to_data = $CONSTANTS['path_to_data'];
     
-    $target_dir = "../../../../data/algebra-one/20/f/uploads/";
-    $path_to_dev = "../../../../dev/submission_tools/";
-    $path_to_data = "../../../../data/algebra-one/20/f/";
-    
-    $mystring = file_get_contents($path_to_dev . "variables.json");
+    $mystring = file_get_contents($path_to_data . "variables.json");
     $variables = json_decode($mystring,true);
+    $testing_mode = $variables["testing"];
     
 if ($variables["server_down"]==1){
      
@@ -180,33 +178,34 @@ if ($variables["server_down"]==1){
         $fp = fopen($temp_file_path, 'a');
         fwrite($fp, $dataJSON2);
         fclose($fp);
-        /*
+
+         /*
          We had a fiasco with discrepancies between PHP paths and python paths.
          This is what you are seeing.
          The solution was to hard code the paths.
          This is going to a bitch when we move it to the server.
+         
+         shell_exec
+         system
+         exec
+         shell_exec
+         
+         these are the three types of ways to interact with the unix shell.
+         "system" outputs the execute code which should return 0 if everything is good.
+          
+          FOR SECURITY: do NOT modify this to allow user input. that is a big no no.
          */
-        //$pyoutput = shell_exec('python helloworld.py');
-        #$shell_command = "/usr/bin/python3 " . $path_to_dev . "new_submission.py";
-        #echo $shell_command . "<br>";
-        #$pyoutput = shell_exec($shell_command);
-        #$pyoutput = system($shell_command);
-        #echo("fuck <br>");
-        #$shell_command = "python3 " . $path_to_dev . "new_submission.py";
-        #$pyoutput = exec($shell_command);
-        #$shell_command = "python3 " . $path_to_dev . "new_submission.py";
-        #$pyoutput = system($shell_command);
-        
-        $shell_command = "python3 " . $path_to_dev . "new_submission.py";
-        #$pyoutput = shell_exec($shell_command);
-        #exec($shell_command,$pyoutput,$exitstatus);
-        #echo $pyoutput . "<br>";
-        #$exitstatus = rtrim($pyoutput);
+         
+        $shell_command = "python3 " . $path_to_dev . "submission_tools/" . "new_submission.py " . $path_to_data;
         system($shell_command,$exitstatus); //got an error here about an unexpected "echo"
         
     }
     
-    //grab data 3
+    /*
+     
+     $data3 is list of 0,1's that is produced from_new_submissions.py which tells us if the entry was sucessfully processed.
+     
+     */
     $mystring3 = file_get_contents($path_to_data . "temp3.json");
     $data3 = json_decode($mystring3,true);
     $user_id = $_POST["netid"];
@@ -216,7 +215,7 @@ if ($variables["server_down"]==1){
     $assignment1= $_POST['assignment1'];
     $problem1= $_POST['problem1'];
     $pdfname1 = $user_id . "-" . $assignment1  ."-" . $problem1 . ".pdf";
-    $target1 = $target_dir . $pdfname1; //needs the submission numbers
+    $target1 = $target_dir . $pdfname1;
     $tmp1 =$_FILES['file1']['tmp_name'];
     
     $uploadOk2 = $data3[2]['uploadOk'];
@@ -224,7 +223,7 @@ if ($variables["server_down"]==1){
     $assignment2= $_POST['assignment2'];
     $problem2= $_POST['problem2'];
     $pdfname2 = $user_id . "-" . $assignment2  ."-" . $problem2 . ".pdf";
-    $target2 = $target_dir . $pdfname2; //needs the submission numbers
+    $target2 = $target_dir . $pdfname2;
     $tmp2 =$_FILES['file2']['tmp_name'];
     
     $uploadOk3 = $data3[3]['uploadOk'];
@@ -232,7 +231,7 @@ if ($variables["server_down"]==1){
     $assignment3= $_POST['assignment3'];
     $problem3= $_POST['problem3'];
     $pdfname3 = $user_id . "-" . $assignment3  ."-" . $problem3 . ".pdf";
-    $target3 = $target_dir . $pdfname3; //needs the submission numbers
+    $target3 = $target_dir . $pdfname3;
     $tmp3 =$_FILES['file3']['tmp_name'];
     
 
@@ -241,7 +240,7 @@ if ($variables["server_down"]==1){
     $assignment4= $_POST['assignment4'];
     $problem4= $_POST['problem4'];
     $pdfname4 = $user_id . "-" . $assignment4  ."-" . $problem4 . ".pdf";
-    $target4 = $target_dir . $pdfname4; //needs the submission numbers
+    $target4 = $target_dir . $pdfname4;
     $tmp4 =$_FILES['file4']['tmp_name'];
     
     $uploadOk5 = $data3[5]['uploadOk'];
@@ -249,13 +248,13 @@ if ($variables["server_down"]==1){
     $assignment5= $_POST['assignment5'];
     $problem5= $_POST['problem5'];
     $pdfname5 = $user_id . "-" . $assignment5  ."-" . $problem5 . ".pdf";
-    $target5 = $target_dir . $pdfname5; //needs the submission numbers
+    $target5 = $target_dir . $pdfname5;
     $tmp5 =$_FILES['file5']['tmp_name'];
         
     
-    // Check if file already exists
+    // Check if files already exists
     
-    echo "<br> PDF UPLOADS: <br>";
+    echo "<h4> PDF uploads </h4>";
         
     if ($uploadOk1 == 1) {
         if (file_exists($target1)) {
@@ -337,8 +336,7 @@ if ($variables["server_down"]==1){
     fwrite($fp, $postJSON3);
     fclose($fp);
     
-    echo "<br> EXIT STATUS: " . $exitstatus . " (if anything other than zero, constant Taylor) <br>";
-    
+    echo "<h6> exit status: </h6>  <p style='font-size:10'>" . $exitstatus . " (if anything other than zero, email tdupuy@uvm.edu with this error message.) </p>";
     
 }
 ?>
