@@ -36,11 +36,9 @@
     }
     */
     
-    #$mystring0 = file_get_contents("constants.json");
-    #$CONSTANTS = json_decode($mystring-,true);
-    #$target_dir=$CONSTANTS['path_to_dev']
-    #$path_to_dev=$CONSTANTS['path_to_data']
-    #$path_to_data=$CONSTANTS['path_to_uploads']
+    $mystring0 = file_get_contents("web_constants.json");
+    $CONSTANTS = json_decode($mystring0,true);
+    $target_dir=$CONSTANTS['path_to_data']
     
     $target_dir = "../../../../data/algebra-one/20/f/uploads/";
     $path_to_dev = "../../../../dev/submission_tools/";
