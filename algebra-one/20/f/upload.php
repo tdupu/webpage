@@ -196,7 +196,7 @@ if ($variables["server_down"]==1){
           FOR SECURITY: do NOT modify this to allow user input. that is a big no no.
          */
          
-        $shell_command = "python3 " . $path_to_dev . "submission_tools/" . "new_submission.py " . $path_to_data;
+        $shell_command = "python36 " . $path_to_dev . "submission_tools/" . "new_submission.py " . $path_to_data . " $testingmode";
         system($shell_command,$exitstatus); //got an error here about an unexpected "echo"
         
     }
