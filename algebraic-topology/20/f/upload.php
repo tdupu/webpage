@@ -200,7 +200,8 @@ if ($variables["server_down"]==1){
          */
          
         $shell_command = "python36 " . $path_to_dev . "submission_tools/" . "new_submission.py " . $path_to_data . " $testing_mode";
-        #echo($shell_command);
+        echo($shell_command);
+        echo('<br>');
         system($shell_command,$exitstatus); //got an error here about an unexpected "echo"
         
     }
