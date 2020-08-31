@@ -38,12 +38,15 @@
     $CONSTANTS = json_decode($mystring0,true);
    
     $target_dir = $CONSTANTS['target_dir'];
+    echo($target_dir);
     $path_to_dev = $CONSTANTS['path_to_dev'];
     $path_to_data = $CONSTANTS['path_to_data'];
     
     $mystring = file_get_contents($path_to_data . "variables.json");
     $variables = json_decode($mystring,true);
+    #echo($variables);
     $testing_mode = $variables["testing"];
+    #echo($testin_mode);
     
 if ($variables["server_down"]==1){
      
@@ -196,7 +199,9 @@ if ($variables["server_down"]==1){
           FOR SECURITY: do NOT modify this to allow user input. that is a big no no.
          */
          
-        $shell_command = "python3 " . $path_to_dev . "submission_tools/" . "new_submission.py " . $path_to_data;
+        $shell_command = "python36 " . $path_to_dev . "submission_tools/" . "new_submission.py " . $path_to_data . " $testing_mode";
+        echo($shell_command);
+        echo('<br>');
         system($shell_command,$exitstatus); //got an error here about an unexpected "echo"
         
     }
