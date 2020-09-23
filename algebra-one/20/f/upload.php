@@ -44,6 +44,7 @@
     $mystring = file_get_contents($path_to_data . "variables.json");
     $variables = json_decode($mystring,true);
     $testing_mode = $variables["testing"];
+    #$server_down = (int)$variables["server_down"]
     
 if ($variables["server_down"]==1){
      
